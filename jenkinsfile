@@ -64,17 +64,14 @@ pipeline {
                 }
             }
         }
-        stage('Docker Scout Image') {
-            steps {
-                script{
-                   withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){
-                       sh 'docker-scout quickview revanmudnal2054/zomato:latest'
-                       sh 'docker-scout cves revanmudnal2054/zomato:latest'
-                       sh 'docker-scout recommendations revanmudnal2054/zomato:latest'
-                   }
-                }
-            }
+       stage('Docker Scout Image') {
+    steps {
+        script {
+            // Use the host's docker login instead of the Jenkins tool version
+            sh "docker scout quickview revanmudnal2054/zomato:latest"
         }
+    }
+}
         stage ("Deploy to Container") {
             steps {
                 sh 'docker run -d --name zomato -p 3000:3000 revanmudnal2054/zomato:latest'
